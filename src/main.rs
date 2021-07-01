@@ -1,5 +1,5 @@
 use std::fmt;
-use std::io::{self, BufRead};
+use std::io::{self, BufRead, Write};
 use std::str::FromStr;
 
 // As an example 3,100,2#F-12:6-100,F-13:12-20,E-9:5-100,E-9:12-90#123 would mean 3,100,2 is Game Data, F-12:6-100,F-13:12-20,E-9:5-100,E-9:12-90 is Map State, and 123 is User Data.
@@ -263,15 +263,22 @@ impl fmt::Display for Action {
     }
 }
 
+fn logic(game: &mut Game) -> Result<()> {
+    Ok(())
+}
+
 fn main() -> Result<()> {
     let stdin = io::stdin();
-    for line in stdin.lock().lines() {
-        let line = line?;
-        let game: Game = line.parse()?;
-    }
+    let line = if let Some(line) = stdin.lock().lines().next() {
+        line?
+    } else {
+        return err!("No input!")
+    };
 
-    println!("5:5-D,12:12-D");
-    Ok(())
+    let mut game: Game = line.parse()?;
+    logic(&mut game)?;
+
+    Ok(writeln!(io::stdout(), "{}", game)?)
 }
 
 #[cfg(test)]
